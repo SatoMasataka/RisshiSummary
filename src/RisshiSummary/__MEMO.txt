@@ -1,0 +1,2 @@
+﻿MecabインストールSjisで
+http://taku910.github.io/mecab/#download

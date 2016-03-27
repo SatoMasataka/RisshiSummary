@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+<html ng-app="myApp" >
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+    
+    <link href='https://fonts.googleapis.com/css?family=Shadows+Into+Light' rel='stylesheet' type='text/css'>
+    <script src="lib/easeljs/lib/easeljs-0.8.2.min.js"></script>
+    <script src="http://code.createjs.com/createjs-2013.05.14.min.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-messages.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-resource.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.10.0/ui-bootstrap-tpls.min.js"></script>
+
+    <script src="./script/app.js"></script>
+    <link rel="stylesheet" href="./css/app.min.css" />
+    <!--
+        <script src="./script/mainpage.js"></script>
+        <link rel="stylesheet" href="./css/mainpage.css" />
+        -->
+     <title>Summary律詩　－さまりっし－</title>
+</head>
+<body ng-controller="mainCtrl" ng-init="">
+    <table class="col-md-12 header" ng-class="{haiku:postedData.mode==0 , dodoitsu:postedData.mode==1}">
+        <tr>
+            <td class="col-md-10">
+                <h5 class="col-md-offset-1">Summary律詩</h5>
+                <h1 class="col-md-offset-1" ng-show="postedData.mode == '0'">エセ尾芭蕉</h1>
+                <h1 class="col-md-offset-1" ng-show="postedData.mode == '1'">どどいつ師匠</h1>
+            </td>
+            <td rowspan="2" class="col-md-2">
+                <a  class="btn_change" ng-click="changeMode()" ng-init="postedData.mode='0'" ng-show="!isLoading" >モード変更</a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h4 class="col-md-offset-1" ng-show="postedData.mode == '0'">入力された文章を、俳聖が侘び寂びに満ちた俳句にしてしまいます。</h4>
+                <h4 class="col-md-offset-1" ng-show="postedData.mode == '1'">冗長な文章も、下劣な文章も、取るに足らない文章も、リズミカルな都都逸に変換します。 </h4>
+            </td>
+        </tr>
+    </table>
+
+    <table class="col-md-10 col-md-offset-1 maintable" align="center" >
+        <tr>
+            <td class="col-md-5" valign="top">
+                <h3>元になるテキスト</h3>
+                <form name="myForm" novalidate>
+                    <textarea ng-model="postedData.inputedTxt" name="inputedTxt" id="inputedTxt" class="col-md-12" rows="20" wrap="soft" 
+                                required ng-minlength="30" ng-maxlength="1000" maxlength="1000" ng-disabled="isLoading" 
+                               ng-init="init();postedData.inputedTxt=initTxt;" style="resize:none">
+                        
+                    </textarea>
+                    <br>
+                    <span ng-show="myForm.inputedTxt.$error.required && !isLoading"> 何か入力してください</span>
+                    <span ng-show="myForm.inputedTxt.$error.minlength"> 最少30文字以上で入力してください</span><br />
+                    <span ng-show="myForm.inputedTxt.$error.maxlength"> 1000文字以内で入力してください</span><br />
+                    
+                    <div style="text-align:right;width:100%">
+                        <input type="button" ng-click="reset()" ng-disabled="isLoading" value="クリア" class="basicButton" />
+                        <input type="button" ng-click="openWikiWindow()" ng-disabled="isLoading" value="Wikipedia参照" class="basicButton" />
+                        <br>
+                        <input type="submit" ng-click="onsubmit()" value="変換！" ng-disabled="myForm.$invalid || isLoading" class="basicButton" style="width:100px;height:60px;font-size:larger;font:bold"/>
+                    </div>
+                </form>       
+            </td>
+            <td class="col-md-5" >
+                <canvas id="test-canvas" width=500 height=550 ></canvas>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"  class="copylight">
+                <a href="../toppage/index.html">powered by SAT Works</a>
+            </td>
+        </tr>
+    </table>
+                                                  
+    <script type="text/ng-template" id="W_Wiki" class="">
+        <div class="modal-header windowTxt">
+            <button type="button" class="close" ng-click="$dismiss()">&times;</button>
+            <h3>Wikipediaから元テキスト取得</h3>
+        </div>
+        <div class="modal-body windowTxt">
+            <p>検索キーワード</p>
+            <input type="text" ng-model="wikiKeyword.inp" />
+        </div>
+        <div class="modal-footer windowTxt">
+            <input type="button" ng-click="getWiki()" ng-disabled="isLoading" value="取得" class="basicButton" />
+        </div>
+    </script>
+</body>
+</html>
